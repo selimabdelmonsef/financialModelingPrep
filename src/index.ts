@@ -25,13 +25,20 @@ interface GENERAL_RESPONSE {
 }
 
 const processCusipData = async (): Promise<GENERAL_RESPONSE> => {
-  try {
-    const inputFilePath = path.join(
-      __dirname,
-      "cusip_name_symbol_map_assignment.csv"
-    );
-    const outputFilePath = path.join(__dirname, "processed_cusip_data.csv");
+  const inputFilePath = path.join(
+    __dirname,
+    "cusip_name_symbol_map_assignment.csv"
+  );
+  const outputFilePath = path.join(__dirname, "processed_cusip_data.csv");
 
+  if (!fs.existsSync(inputFilePath)) {
+    console.error("Error: Input file not found.");
+    return {
+      result: RESPONSE_STATUS.nok,
+      message: "Error: Input file not found.",
+    };
+  }
+  try {
     const rows: CSVRow[] = [];
     const nameToSymbolMap = new Map<string, string>();
     const cusipToSymbolMap = new Map<string, string>();
